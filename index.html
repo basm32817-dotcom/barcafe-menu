@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a120b">
+<title>BAR CAFE — المنيو</title>
+<!-- ============================================================
+     صفحة المنيو الرقمية — BAR CAFE
+     عربي / English
+     لتعديل الأصناف والأسعار: عدّل مصفوفة MENU في الأسفل
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#17110a;
+    --bg2:#201710;
+    --card:#2a1f14;
+    --card2:#33251a;
+    --cream:#f3e6d0;
+    --cream-dim:#cbb79a;
+    --gold:#d9a441;
+    --gold2:#f0c569;
+    --line:rgba(217,164,65,.22);
+    --radius:16px;
+    --shadow:0 6px 22px rgba(0,0,0,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 500px at 80% -10%, rgba(217,164,65,.14), transparent 60%),
+      radial-gradient(900px 400px at 10% 110%, rgba(120,60,20,.25), transparent 60%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  html[dir="ltr"] body{font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif}
+
+  /* ---------- Header ---------- */
+  .hero{
+    position:relative;
+    text-align:center;
+    padding:56px 16px 34px;
+    background:
+      linear-gradient(180deg, rgba(23,17,10,.2), var(--bg) 92%),
+      radial-gradient(700px 260px at 50% 0%, rgba(217,164,65,.18), transparent 70%);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:radial-gradient(rgba(240,197,105,.16) 1px, transparent 1px);
+    background-size:26px 26px;
+    opacity:.5;pointer-events:none;
+  }
+  .badge{
+    display:inline-block;
+    font-size:12px;letter-spacing:4px;font-weight:700;
+    color:var(--gold2);
+    border:1px solid var(--line);
+    padding:6px 18px;border-radius:999px;
+    background:rgba(217,164,65,.08);
+    margin-bottom:16px;
+    text-transform:uppercase;
+  }
+  .hero h1{
+    font-family:'Playfair Display','Cairo',serif;
+    font-size:clamp(44px, 9vw, 74px);
+    font-weight:800;
+    letter-spacing:2px;
+    color:#fff;
+    text-shadow:0 4px 30px rgba(217,164,65,.35);
+    line-height:1.05;
+  }
+  .hero h1 .dot{color:var(--gold)}
+  .tagline{
+    margin-top:10px;
+    font-size:clamp(15px,3.4vw,19px);
+    color:var(--cream-dim);
+    font-weight:400;
+  }
+  .tagline b{color:var(--gold2);font-weight:700}
+
+  /* ---------- Language toggle ---------- */
+  .langbar{
+    position:sticky;top:0;z-index:50;
+    display:flex;justify-content:center;align-items:center;gap:14px;
+    padding:10px 16px;
+    background:rgba(23,17,10,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .langbar .brand{font-weight:700;font-size:14px;color:var(--gold2);letter-spacing:1px}
+  .langbar .spacer{flex:1;max-width:320px}
+  .btn-lang{
+    border:1px solid var(--line);background:rgba(217,164,65,.1);
+    color:var(--cream);font-family:inherit;font-size:13px;font-weight:700;
+    padding:6px 14px;border-radius:999px;cursor:pointer;
+    transition:.2s;
+  }
+  .btn-lang:hover{background:var(--gold);color:#1a120b;border-color:var(--gold)}
+  .btn-lang.active{background:var(--gold);color:#1a120b;border-color:var(--gold)}
+
+  /* ---------- Categories ---------- */
+  .cats{
+    position:sticky;top:52px;z-index:40;
+    display:flex;gap:8px;overflow-x:auto;
+    padding:12px 16px;
+    background:rgba(32,23,16,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    scrollbar-width:none;
+  }
+  .cats::-webkit-scrollbar{display:none}
+  .cat-chip{
+    flex:0 0 auto;
+    display:flex;align-items:center;gap:6px;
+    font-family:inherit;font-size:13.5px;font-weight:700;
+    color:var(--cream-dim);
+    background:var(--card);
+    border:1px solid transparent;
+    padding:8px 16px;border-radius:999px;cursor:pointer;
+    transition:.18s;
+  }
+  .cat-chip:hover{color:var(--cream);border-color:var(--line)}
+  .cat-chip.active{
+    color:#1a120b;background:var(--gold);border-color:var(--gold);
+    box-shadow:0 4px 16px rgba(217,164,65,.35);
+  }
+
+  /* ---------- Menu ---------- */
+  main{max-width:760px;margin:0 auto;padding:26px 16px 90px}
+  section.cat{margin-bottom:38px;scroll-margin-top:120px}
+  .cat-head{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:16px;
+  }
+  .cat-head .ic{
+    width:44px;height:44px;flex:0 0 44px;
+    display:grid;place-items:center;
+    font-size:22px;
+    background:linear-gradient(145deg, var(--card2), var(--card));
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  .cat-head h2{font-size:20px;font-weight:900;color:#fff}
+  .cat-head .en-sub{font-size:12.5px;color:var(--cream-dim);font-weight:600;letter-spacing:.5px}
+  .cat-head .rule{flex:1;height:1px;background:linear-gradient(90deg, var(--line), transparent)}
+
+  .items{display:grid;gap:12px}
+  .item{
+    display:flex;align-items:center;gap:14px;
+    background:linear-gradient(150deg, var(--card), var(--card2));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    box-shadow:var(--shadow);
+    transition:.2s;
+  }
+  .item:hover{transform:translateY(-2px);border-color:rgba(217,164,65,.45)}
+  .item .emoji{
+    width:46px;height:46px;flex:0 0 46px;
+    display:grid;place-items:center;
+    font-size:23px;
+    background:rgba(217,164,65,.1);
+    border-radius:12px;
+  }
+  .item .info{flex:1;min-width:0}
+  .item .name{font-weight:700;font-size:15.5px;color:#fff;line-height:1.4}
+  .item .name .alt{font-weight:400;color:var(--cream-dim);font-size:13px;margin-inline-start:6px}
+  .item .desc{font-size:12.5px;color:var(--cream-dim);margin-top:3px;line-height:1.55}
+  .item .extra{font-size:12px;color:var(--gold2);margin-top:3px;line-height:1.5}
+  .item .price{
+    font-weight:900;font-size:15px;color:var(--gold2);
+    background:rgba(217,164,65,.1);
+    border:1px solid var(--line);
+    padding:7px 12px;border-radius:999px;
+    line-height:1.4;text-align:center;
+    max-width:150px;flex:0 0 auto;
+  }
+  .cat-note{
+    margin-top:12px;
+    padding:10px 14px;
+    background:rgba(217,164,65,.08);
+    border:1px dashed var(--line);
+    border-radius:12px;
+    font-size:12.5px;color:var(--cream-dim);line-height:1.7;
+  }
+  .cat-note b{color:var(--gold2)}
+
+  /* ---------- Info / footer ---------- */
+  .info{
+    margin-top:10px;
+    display:grid;gap:10px;
+    background:linear-gradient(150deg, var(--card), var(--card2));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    text-align:center;
+  }
+  .info h3{color:var(--gold2);font-size:17px;margin-bottom:4px}
+  .info p{color:var(--cream-dim);font-size:14px}
+  .info .row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--cream)}
+  .info .row span b{color:var(--gold2)}
+  .cta{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:6px;
+    background:var(--gold);color:#1a120b;
+    font-weight:900;font-size:15px;
+    padding:12px 26px;border-radius:999px;text-decoration:none;
+    box-shadow:0 6px 20px rgba(217,164,65,.35);
+    transition:.2s;
+  }
+  .cta:hover{background:var(--gold2);transform:translateY(-1px)}
+
+  footer{
+    text-align:center;padding:22px 16px 30px;
+    color:var(--cream-dim);font-size:12.5px;
+    border-top:1px solid var(--line);
+    letter-spacing:.4px;
+  }
+  footer b{color:var(--gold2)}
+
+  @media (min-width:640px){
+    .items{grid-template-columns:1fr 1fr}
+    .info{text-align:start}
+    .info .row{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge" data-i18n="badge">☕ قائمة المشروبات والوجبات</div>
+  <h1>BAR <span class="dot">•</span> CAFE</h1>
+  <p class="tagline">ذوق <b>أجود</b> المشروبات والقهوة بلمسة عربية أصيلة</p>
+</div>
+
+<div class="langbar">
+  <span class="brand">MENU</span>
+  <span class="spacer"></span>
+  <button class="btn-lang active" id="btnAr">العربية</button>
+  <button class="btn-lang" id="btnEn">English</button>
+</div>
+
+<div class="cats" id="cats"></div>
+
+<main id="menu"></main>
+
+<section class="info" style="max-width:760px;margin:0 auto 24px">
+  <h3 data-i18n="infoTitle">📍 موقعنا ومعلومات التواصل</h3>
+  <div class="row">
+    <span>🕐 <b data-i18n="hoursLabel">ساعات العمل:</b> <span data-i18n="hoursValue">من 8 صباحاً حتى 2 بعد منتصف الليل</span></span>
+    <span>📞 <b>تليفون:</b> <span id="phoneVal">01xxxxxxxxx</span></span>
+  </div>
+  <a class="cta" id="waLink" href="#" target="_blank" rel="noopener">
+    💬 <span data-i18n="cta">اطلب عبر واتساب</span>
+  </a>
+</section>
+
+<footer>
+  <b>BAR CAFE</b> © <span id="yr"></span> — <span data-i18n="foot">شكراً لزيارتكم، نتمنى لكم أوقاتاً سعيدة</span> ☕
+</footer>
+
+<script>
+/* ============================================================
+   1) تعديل بيانات الكافيه (الاسم، التليفون، واتساب)
+   ============================================================ */
+const CAFE = {
+  phone: "01000000000",          // رقم التليفون الظاهر في المنيو
+  whatsapp: "201000000000",      // رقم الواتساب لاستقبال الطلبات (بصيغة الدولية بدون +)
+  currency: "ج.م",               // العملة بالعربي — ج.م / جنيه
+  currencyEn: "EGP"              // العملة بالإنجليزي
+};
+
+/* ============================================================
+   2) المنيو الكامل — عدّل أو زد أو امسح براحتك
+   كل فئة: { e: إيموجي, ar: اسم عربي, en: اسم إنجليزي,
+             note: [{ar,en}] إضافات عامة للفئة (اختياري),
+             items: [...] }
+   كل منتج: { ar, en, price, desc?: وصف، extra?: [{ar,en}] }
+   price: رقم واحد زي 70 — أو نص للمقاسات زي "M: 25 | L: 45"
+   ============================================================ */
+const MENU = [
+  {
+    e: "☕", ar: "القهوة الساخنة", en: "Hot Coffee",
+    items: [
+      { ar: "قهوة تركي سادة",        en: "Plain Turkish Coffee",      price: "M: 25 | L: 45", desc: "فاتح - وسط - غامق" },
+      { ar: "قهوة تركي محوج",        en: "Spiced Turkish Coffee",     price: "M: 25 | L: 45", desc: "فاتح - وسط - غامق" },
+      { ar: "بن العميد",             en: "Al Ameed Coffee",           price: "M: 45 | L: 75" },
+      { ar: "قهوة فرنساني سادة",     en: "Plain French Coffee",       price: 40, desc: "بن فاتح + حليب + رغوة حليب" },
+      { ar: "قهوة فرنساني فليفر",    en: "Flavored French Coffee",    price: 50, desc: "بندق - كراميل - فانيليا - جوز هند - شوكولاتة - لوتس" },
+      { ar: "V60",                   en: "V60",                       price: 65 },
+      { ar: "إسبريسو",               en: "Espresso",                  price: "M: 40 | L: 60" },
+      { ar: "ريستريتو",              en: "Ristretto",                 price: "M: 40 | L: 60" },
+      { ar: "ميكاتو",                en: "Piccolo",                   price: "M: 45 | L: 70", desc: "إسبريسو + كريمة حليب" },
+      { ar: "كورتادو",               en: "Cortado",                   price: "M: 45 | L: 70", desc: "إسبريسو + حليب + كريمة حليب" },
+      { ar: "كابتشينو",              en: "Cappuccino",                price: "M: 50 | L: 70", desc: "إسبريسو + حليب + كريمة حليب" },
+      { ar: "كابتشينو فليفر",        en: "Flavored Cappuccino",       price: "M: 60 | L: 80", desc: "بندق - كراميل - فانيليا - جوز هند" },
+      { ar: "لاتيه",                 en: "Latte",                     price: "M: 50 | L: 70", desc: "إسبريسو + حليب + كريمة حليب" },
+      { ar: "لاتيه فليفر",           en: "Flavored Latte",            price: "M: 60 | L: 80", desc: "بندق - كراميل - فانيليا - جوز هند" },
+      { ar: "ماتشا",                 en: "Matcha",                    price: 60 },
+      { ar: "سبانيش لاتيه",          en: "Spanish Latte",             price: "M: 60 | L: 85", desc: "إسبريسو + حليب + حليب مكثف + كريمة حليب" },
+      { ar: "فلات وايت",             en: "Flat White",                price: 70, desc: "دبل شوت إسبريسو + حليب مبخر" },
+      { ar: "نسكافيه",               en: "Nescafe",                   price: "M: 35 | L: 55", desc: "نسكافيه + حليب" },
+      { ar: "نسكافيه فليفر",         en: "Flavored Nescafe",          price: "M: 45 | L: 65", desc: "بندق - كراميل - فانيليا - جوز هند" },
+      { ar: "موكا",                  en: "Mocha",                     price: "M: 60 | L: 80", desc: "إسبريسو + شوكولاتة + حليب + كريمة حليب" },
+      { ar: "وايت موكا",             en: "White Mocha",               price: "M: 60 | L: 80", desc: "إسبريسو + وايت شوكولاتة + حليب + كريمة حليب" },
+      { ar: "موكا كراميل",           en: "Caramel Mocha",             price: "M: 60 | L: 80", desc: "إسبريسو + كراميل + شوكولاتة + حليب + كريمة حليب" },
+      { ar: "موكا لوتس",             en: "Lotus Mocha",               price: "M: 60 | L: 80", desc: "إسبريسو + لوتس + شوكولاتة + حليب + كريمة حليب" },
+      { ar: "أمريكان كوفي",          en: "Americano",                 price: "M: 40 | L: 65", desc: "إسبريسو + مياه ساخنة" }
+    ]
+  },
+  {
+    e: "🍵", ar: "المشروبات الساخنة", en: "Hot Drinks",
+    items: [
+      { ar: "شاي",                   en: "Tea",                       price: "M: 15" },
+      { ar: "أعشاب",                 en: "Herbal Tea",                price: "M: 15", desc: "ينسون - كركديه - نعناع - قرفة" },
+      { ar: "قرفة حليب",             en: "Cinnamon Milk",             price: "M: 30 | L: 45", desc: "قرفة + حليب" },
+      { ar: "سحلب مكسرات",           en: "Sahlab with Nuts",          price: "M: 40 | L: 55" },
+      { ar: "سحلب فواكه",            en: "Fruit Sahlab",              price: "M: 45 | L: 55" },
+      { ar: "سحلب فليفر",            en: "Flavored Sahlab",           price: "M: 45 | L: 55", desc: "شوكولاتة - لوتس - بندق - كراميل - فانيليا - جوز هند" },
+      { ar: "هوت سيدر",              en: "Hot Cider",                 price: "M: 40 | L: 50", desc: "قرفة + عصير تفاح" },
+      { ar: "هوت شوكليت",            en: "Hot Chocolate",             price: "M: 45 | L: 65", desc: "شوكولاتة + حليب مبخر" },
+      { ar: "هوت لوتس",              en: "Hot Lotus",                 price: "M: 45 | L: 65", desc: "لوتس + حليب مبخر + بسكوت لوتس" },
+      { ar: "هوت كراميل",            en: "Hot Caramel",               price: "M: 45 | L: 65", desc: "صوص كراميل + حليب مبخر" },
+      { ar: "هوت وايت شوكليت",       en: "Hot White Chocolate",       price: "M: 45 | L: 65", desc: "وايت شوكليت + حليب مبخر" },
+      { ar: "هوت شوكليت مارشميلو",   en: "Hot Chocolate Marshmallow", price: "M: 50 | L: 70", desc: "شوكولاتة + حليب مبخر + مارشميلو" }
+    ]
+  },
+  {
+    e: "🧊", ar: "القهوة الباردة", en: "Iced Coffee",
+    note: [
+      { ar: "إضافة ويب كريم: +20 ج.م", en: "Add whipped cream: +20 EGP" },
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "آيس لاتيه",             en: "Iced Latte",                price: 70, desc: "إسبريسو + ثلج + حليب" },
+      { ar: "آيس كابتشينو",          en: "Iced Cappuccino",           price: 70, desc: "إسبريسو + ثلج + حليب + كريمة حليب" },
+      { ar: "آيس سبانيش لاتيه",      en: "Iced Spanish Latte",        price: 75, desc: "شوكولاتة + ثلج + حليب مكثف" },
+      { ar: "آيس موكا",              en: "Iced Mocha",                price: 75, desc: "إسبريسو + شوكولاتة + ثلج + حليب" },
+      { ar: "آيس لاتيه بستاشيو",     en: "Iced Pistachio Latte",      price: 90, desc: "بستاشيو + إسبريسو + حليب + ثلج" },
+      { ar: "آيس موكا لوتس",         en: "Iced Lotus Mocha",          price: 80, desc: "إسبريسو + حليب + شوكولاتة + لوتس" },
+      { ar: "آيس كراميل",            en: "Iced Caramel",              price: 55, desc: "آيس كريم + كراميل + حليب + ثلج" },
+      { ar: "آيس لوتس",              en: "Iced Lotus",                price: 55, desc: "آيس كريم + ثلج + لوتس + حليب" },
+      { ar: "آيس شوكليت",            en: "Iced Chocolate",            price: 55, desc: "شوكولاتة + آيس كريم + ثلج + حليب" },
+      { ar: "آيس لاتيه ماتشا",       en: "Iced Matcha Latte",         price: 70, desc: "ماتشا + ثلج + حليب" },
+      { ar: "آيس لاتيه فليفر",       en: "Iced Flavored Latte",       price: 75, desc: "بندق - كراميل - فانيليا - جوز هند - لوتس - كيندر" }
+    ]
+  },
+  {
+    e: "🥤", ar: "فرابيه", en: "Frappe",
+    note: [
+      { ar: "إضافة ويب كريم: +20 ج.م", en: "Add whipped cream: +20 EGP" },
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "كوفي فرابيه",           en: "Coffee Frappe",             price: 80, desc: "إسبريسو + ثلج + آيس كريم + حليب" },
+      { ar: "فرابتشينو كراميل",      en: "Caramel Frappuccino",       price: 90, desc: "إسبريسو + آيس كريم + كراميل + ثلج + حليب" },
+      { ar: "موكا فرابيه",           en: "Mocha Frappe",              price: 90, desc: "إسبريسو + ثلج + آيس كريم + شوكولاتة" },
+      { ar: "فرابيه كيندر",          en: "Kinder Frappe",             price: 90, desc: "باودر فرابيه + صوص كيندر + آيس كريم + ثلج + حليب" },
+      { ar: "فرابيه بندق",           en: "Hazelnut Frappe",           price: 90, desc: "إسبريسو + آيس كريم + ثلج + حليب + سيرب بندق" },
+      { ar: "فرابيه فانيليا",        en: "Vanilla Frappe",            price: 85, desc: "إسبريسو + آيس كريم فانيليا + ثلج + سيرب فانيليا" },
+      { ar: "فرابيه أوريو",          en: "Oreo Frappe",               price: 90, desc: "إسبريسو + آيس كريم + ثلج + حليب + أوريو" },
+      { ar: "فرابيه جيرسي",          en: "Jersey Frappe",             price: 90, desc: "إسبريسو + آيس كريم + ثلج + حليب + جيرسي" },
+      { ar: "فرابيه استيكرز",        en: "Stickers Frappe",           price: 100, desc: "إسبريسو + آيس كريم + ثلج + حليب + شوكولاتة استيكرز" },
+      { ar: "فرابيه كيت كات",        en: "Kit Kat Frappe",            price: 100, desc: "إسبريسو + آيس كريم + ثلج + حليب + شوكولاتة كيت كات" }
+    ]
+  },
+  {
+    e: "🥛", ar: "ميلك شيك", en: "Milkshake",
+    note: [
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "ميلك شيك شوكليت",      en: "Chocolate Milkshake",        price: 80, desc: "آيس كريم + حليب + شوكولاتة + ويب كريم" },
+      { ar: "ميلك شيك لوتس",        en: "Lotus Milkshake",            price: 80, desc: "آيس كريم + حليب + لوتس + بسكوت لوتس + ويب كريم" },
+      { ar: "ميلك شيك أوريو",       en: "Oreo Milkshake",             price: 80, desc: "آيس كريم + حليب + شوكولاتة + أوريو + ويب كريم" },
+      { ar: "ميلك شيك هوهوز",       en: "Hohos Milkshake",            price: 80, desc: "آيس كريم + حليب + هوهوز + ويب كريم" },
+      { ar: "ميلك شيك سنيكرز",      en: "Snickers Milkshake",         price: 90, desc: "آيس كريم + حليب + شوكولاتة سنيكرز + ويب كريم" },
+      { ar: "ميلك شيك كيت كات",     en: "Kit Kat Milkshake",          price: 90, desc: "آيس كريم + حليب + شوكولاتة كيت كات + ويب كريم" },
+      { ar: "ميلك شيك جيرسي",       en: "Jersey Milkshake",           price: 90, desc: "آيس كريم + حليب + جيرسي + ويب كريم" },
+      { ar: "ميلك شيك بيري",        en: "Berry Milkshake",            price: 80, desc: "آيس كريم + حليب + لوس بيري + ويب كريم" },
+      { ar: "ميلك شيك فراولة",      en: "Strawberry Milkshake",       price: 75, desc: "آيس كريم + حليب + فراولة + ويب كريم" },
+      { ar: "ميلك شيك مارشميلو",    en: "Marshmallow Milkshake",      price: 75, desc: "آيس كريم + حليب + مارشميلو + ويب كريم" },
+      { ar: "ميلك شيك مانجا",       en: "Mango Milkshake",            price: 75, desc: "آيس كريم + حليب + مانجا + ويب كريم" },
+      { ar: "ميلك شيك بينا كولاد",  en: "Pina Colada Milkshake",      price: 85, desc: "آيس كريم + حليب + أناناس + جوز هند + ويب كريم" },
+      { ar: "ميلك شيك كراميل",      en: "Caramel Milkshake",          price: 75, desc: "آيس كريم + حليب + كراميل + ويب كريم" },
+      { ar: "ميلك شيك كاجو",        en: "Cashew Milkshake",           price: 110, desc: "آيس كريم + حليب + كاجو + ويب كريم" },
+      { ar: "ميلك شيك بستاشيو",     en: "Pistachio Milkshake",        price: 110, desc: "آيس كريم + حليب + بستاشيو + ويب كريم" },
+      { ar: "ميلك شيك فانيليا",     en: "Vanilla Milkshake",          price: 75, desc: "آيس كريم فانيليا + حليب + سيرب فانيليا + ويب كريم" }
+    ]
+  },
+  {
+    e: "🍃", ar: "موهيتو", en: "Mojito",
+    note: [
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "اسكوتش منت",           en: "Scotch Mint",                price: 45, desc: "سيرب نعناع + صودا" },
+      { ar: "بلو هواي",             en: "Blue Hawaii",                price: 50, desc: "صودا + سليزات ليمون + صوص أناناس + بلو كوراسو" },
+      { ar: "بلو بيري",             en: "Blueberry",                  price: 50, desc: "صوص بلوبيري + صودا + سليزات ليمون + نعناع فريش" },
+      { ar: "بلو باشن",             en: "Blue Passion",               price: 50, desc: "باشن فروت + صودا + سليزات ليمون + نعناع فريش + بلو كوراسو" },
+      { ar: "سن رايز",              en: "Sunrise",                    price: 50, desc: "سيرب رومان + صودا + سليزات ليمون + نعناع فريش" },
+      { ar: "ميكس توت",             en: "Berry Mix",                  price: 60, desc: "بلوبيري + راسبري + صودا + سليزات ليمون + نعناع فريش" },
+      { ar: "سن شاين",              en: "Sunshine",                   price: 60, desc: "فراولة + صودا + عصير برتقال + سليزات ليمون" },
+      { ar: "بينا كولادا",          en: "Pina Colada",                price: 65, desc: "صودا + صوص أناناس + سيرب جوز هند + سليزات ليمون" },
+      { ar: "شيري كولا",            en: "Cherry Cola",                price: 55, desc: "صودا + سليزات ليمون + سيرب كولا وشيري" },
+      { ar: "ميكس صودا",            en: "Soda Mix",                   price: 55, desc: "صوصان من اختيارك + صودا + سليزات ليمون + نعناع فريش" },
+      { ar: "كيوي صودا",            en: "Kiwi Soda",                  price: 50, desc: "كيوي + صودا + سليزات ليمون + نعناع فريش" },
+      { ar: "فراولة صودا",          en: "Strawberry Soda",            price: 50, desc: "فراولة + صودا + سليزات ليمون + سليزات فراولة" },
+      { ar: "موهيتو هواي",          en: "Hawaii Mojito",              price: 50, desc: "ليمون + نعناع + صودا + سليزات ليمون + بلو كوراسو" },
+      { ar: "تفاح صودا",            en: "Apple Soda",                 price: 50, desc: "ليمون + نعناع + صودا + سليزات ليمون + بلو كوراسو" },
+      { ar: "ريد بول فليفر",        en: "Flavored Red Bull",          price: 90, desc: "ريد بول + صوص من اختيارك + سليزات ليمون" }
+    ]
+  },
+  {
+    e: "🍹", ar: "كوكتيل", en: "Cocktail",
+    items: [
+      { ar: "فلوريدا",              en: "Florida",                    price: 70, desc: "مانجا - فراولة - جوافة" },
+      { ar: "مكسيكو",               en: "Mexico",                     price: 70, desc: "مانجا - فراولة - كيوي" },
+      { ar: "بينك روز",             en: "Pink Rose",                  price: 70, desc: "مانجا + فراولة + آيس كريم فانيليا" },
+      { ar: "بور جيم",              en: "Bourjim",                    price: 70, desc: "فراولة + كيوي + زبادي + عسل" },
+      { ar: "ميكس فواكه",           en: "Fruit Mix",                  price: 70, desc: "3 أنواع من اختيارك" },
+      { ar: "فراولة بيري",          en: "Strawberry Berry",           price: 70, desc: "فراولة + بلو بيري + موز" },
+      { ar: "بطيخ نعناع",           en: "Watermelon Mint",            price: 50 },
+      { ar: "بنانه بيري",           en: "Banana Berry",               price: 70, desc: "موز + بلو بيري + راسبيري" },
+      { ar: "كيوي مانجا",           en: "Kiwi Mango",                 price: 70 },
+      { ar: "مانجا بطيخ",           en: "Mango Watermelon",           price: 70 },
+      { ar: "خوخ مانجا",            en: "Peach Mango",                price: 70 },
+      { ar: "أفوكادو عسل زبادي",    en: "Avocado Honey Yogurt",       price: 75 },
+      { ar: "أفوكادو كيوي",         en: "Avocado Kiwi",               price: 80 },
+      { ar: "أفوكادو موز",          en: "Avocado Banana",             price: 80 },
+      { ar: "أفوكادو كيوي مانجا",   en: "Avocado Kiwi Mango",         price: 85 }
+    ]
+  },
+  {
+    e: "🧃", ar: "سموذي وعصائر طازجة", en: "Smoothie & Fresh Juices",
+    note: [
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "مانجا",                en: "Mango",                      price: 55 },
+      { ar: "ليمون نعناع",          en: "Lemon Mint",                 price: 60 },
+      { ar: "ليمون",                en: "Lemon",                      price: 45 },
+      { ar: "جوافة",                en: "Guava",                      price: 60 },
+      { ar: "كنتالوب",              en: "Cantaloupe",                 price: 45 },
+      { ar: "موز حليب",             en: "Banana Milk",                price: 45 },
+      { ar: "بلو بيري",             en: "Blueberry",                  price: 45 },
+      { ar: "ميكس بيري",            en: "Berry Mix",                  price: 40 },
+      { ar: "فراولة",               en: "Strawberry",                 price: 40 },
+      { ar: "بينا كولادا",          en: "Pina Colada",                price: 45 },
+      { ar: "بطيخ",                 en: "Watermelon",                 price: 45 },
+      { ar: "خوخ",                  en: "Peach",                      price: 50 },
+      { ar: "كيوي",                 en: "Kiwi",                       price: 60 }
+    ]
+  },
+  {
+    e: "🥤", ar: "باشن فروت وسلاش", en: "Passion Fruit & Slush",
+    note: [
+      { ar: "إضافة بوبا: +30 ج.م",  en: "Add boba: +30 EGP" }
+    ],
+    items: [
+      { ar: "بطيخ باشن",            en: "Watermelon Passion",         price: 60 },
+      { ar: "فراولة باشن",          en: "Strawberry Passion",         price: 60 },
+      { ar: "كيوي باشن",            en: "Kiwi Passion",               price: 60 },
+      { ar: "مانجا باشن",           en: "Mango Passion",              price: 60 },
+      { ar: "خوخ باشن",             en: "Peach Passion",              price: 60 },
+      { ar: "باشن أناناس",          en: "Passion Pineapple",          price: 60 },
+      { ar: "ميكس من اختيارك",      en: "Mix of Your Choice",         price: 65 },
+      { ar: "باشن",                 en: "Passion",                    price: 60 },
+      { ar: "كيوي",                 en: "Kiwi",                       price: 60 },
+      { ar: "خوخ",                  en: "Peach",                      price: 60 },
+      { ar: "توت",                  en: "Berry",                      price: 60 },
+      { ar: "ميكس بيري",            en: "Berry Mix",                  price: 60 },
+      { ar: "نعناع",                en: "Mint",                       price: 60 },
+      { ar: "تفاح أخضر",            en: "Green Apple",                price: 60 },
+      { ar: "بيري",                 en: "Berry",                      price: 65 }
+    ]
+  },
+  {
+    e: "🥤", ar: "المشروبات الغازية", en: "Soft Drinks",
+    items: [
+      { ar: "بيبسي",                en: "Pepsi",                      price: 25 },
+      { ar: "فيروز",                en: "Fayrouz",                    price: 25 },
+      { ar: "سفن أب",               en: "7up",                        price: 25 },
+      { ar: "بيرة",                 en: "Birell",                     price: 30 },
+      { ar: "ريد بول",              en: "Red Bull",                   price: 65 },
+      { ar: "مياه معدنية",          en: "Mineral Water",              price: 10 }
+    ]
+  },
+  {
+    e: "🍰", ar: "الحلويات", en: "Desserts",
+    items: [
+      { ar: "سينابون رول كراميل",   en: "Caramel Cinnamon Roll",      price: 75,
+        extra: [
+          { ar: "إضافة صوص (شوكليت - وايت - لوتس): +10", en: "Add sauce (Choc - White - Lotus): +10" },
+          { ar: "إضافة بستاشيو: +25", en: "Add pistachio: +25" }
+        ] },
+      { ar: "براونيز",              en: "Brownie",                    price: 75 },
+      { ar: "مولتن كيك",            en: "Molten Cake",                price: 80,
+        extra: [
+          { ar: "إضافة صوص (تشوكليت - وايت تشوكليت - كيندر - لوتس): +10", en: "Add sauce (Choc - White Choc - Kinder - Lotus): +10" },
+          { ar: "إضافة بستاشيو: +25", en: "Add pistachio: +25" }
+        ] },
+      { ar: "تراميسو",              en: "Tiramisu",                   price: 80 },
+      { ar: "ميلك فيوجن كيك",       en: "Milk Fusion Cake",           price: 80 },
+      { ar: "فتة سينابون",          en: "Cinnamon Fatta",             price: 80 },
+      { ar: "تشيز كيك",             en: "Cheesecake",                 price: 90 },
+      { ar: "سان سباستيان",         en: "San Sebastian",              price: 90 }
+    ]
+  },
+  {
+    e: "🥐", ar: "الإفطار", en: "Breakfast",
+    items: [
+      { ar: "ساندويتش بيف حلواني",  en: "Beef Sandwich (Halwani)",    price: 40, desc: "لانشون حلواني - جبنة شيدر - خس - زيتون" },
+      { ar: "ساندويتش روز بيف",     en: "Roast Beef Sandwich",        price: 45, desc: "شرائح روز بيف - جبنة شيدر - خس - زيتون" },
+      { ar: "ساندويتش سموك تركي",   en: "Smoked Turkey Sandwich",     price: 45, desc: "شرائح تركي مدخن - جبنة شيدر - خس - زيتون" },
+      { ar: "كرواسون بيف حلواني",   en: "Croissant Beef (Halwani)",   price: 60, desc: "لانشون حلواني - جبنة شيدر - خس - زيتون" },
+      { ar: "كرواسون روز بيف",      en: "Croissant Roast Beef",       price: 70, desc: "شرائح روز بيف - جبنة شيدر - خس - زيتون" },
+      { ar: "كرواسون سموك تركي",    en: "Croissant Smoked Turkey",    price: 70, desc: "شرائح تركي مدخن - جبنة شيدر - خس - زيتون" },
+      { ar: "كرواسون تشوكليت",      en: "Chocolate Croissant",        price: 40, desc: "تشوكليت - لوتس - كيندر" },
+      { ar: "كرواسون بستاشيو",      en: "Pistachio Croissant",        price: 50 }
+    ]
+  },
+  {
+    e: "🥞", ar: "بان كيك", en: "Pancakes",
+    note: [
+      { ar: "إضافة فواكه: +25 ج.م", en: "Add fruit: +25 EGP" }
+    ],
+    items: [
+      { ar: "ميني بان كيك بستاشيو", en: "Pistachio Mini Pancake",     price: "M (12): 100 | L (24): 140" },
+      { ar: "ميني بان كيك هاف اند هاف", en: "Half & Half Mini Pancake", price: "M (12): 70 | L (24): 100", desc: "تشوكليت - وايت تشوكليت - كيندر - لوتس / بستاشيو +25" },
+      { ar: "ميني بان كيك فور سيزون", en: "Four Seasons Mini Pancake", price: "M (12): 85 | L (24): 110" },
+      { ar: "ميني بان كيك إكسترا وافل", en: "Extra Waffle Mini Pancake", price: "L (24): 100", desc: "تشوكليت - وايت تشوكليت - كيندر - لوتس / بستاشيو +25" },
+      { ar: "ميني بان كيك شوكلت",   en: "Chocolate Mini Pancake",     price: "M (12): 70 | L (24): 100" },
+      { ar: "ميني بان كيك وايت شوكلت", en: "White Chocolate Mini Pancake", price: "M (12): 70 | L (24): 100" },
+      { ar: "ميني بان كيك لوتس",    en: "Lotus Mini Pancake",         price: "M (12): 70 | L (24): 100" },
+      { ar: "ميني بان كيك كيندر",   en: "Kinder Mini Pancake",        price: "M (12): 70 | L (24): 100" },
+      { ar: "ميني بان كيك عسل",     en: "Honey Mini Pancake",         price: "M (12): 70 | L (24): 100" }
+    ]
+  },
+  {
+    e: "🧇", ar: "وافل", en: "Waffles",
+    items: [
+      { ar: "وافل تشوكلت",          en: "Chocolate Waffle",           price: "M: 70 | L: 100" },
+      { ar: "وافل وايت تشوكلت",     en: "White Chocolate Waffle",     price: "M: 70 | L: 100" },
+      { ar: "وافل كراميل",          en: "Caramel Waffle",             price: "M: 70 | L: 100" },
+      { ar: "وافل لوتس",            en: "Lotus Waffle",               price: "M: 70 | L: 100" },
+      { ar: "وافل كيندر",           en: "Kinder Waffle",              price: "M: 70 | L: 100" },
+      { ar: "وافل تشوكلت فواكه",    en: "Chocolate Fruit Waffle",     price: "M: 80 | L: 110" },
+      { ar: "وافل تشوكلت أوريو",    en: "Chocolate Oreo Waffle",      price: "M: 80 | L: 110" },
+      { ar: "وافل هاف اند هاف",     en: "Half & Half Waffle",         price: "M: 75 | L: 100", desc: "تشوكليت - وايت تشوكليت - كيندر - لوتس - أوريو / بستاشيو +25" },
+      { ar: "وافل فور سيزون",       en: "Four Seasons Waffle",        price: "M: 85 | L: 115", desc: "تشوكليت - وايت تشوكليت - كيندر - لوتس / بستاشيو +25" },
+      { ar: "وافل بستاشيو",         en: "Pistachio Waffle",           price: "M: 100 | L: 130" }
+    ]
+  },
+  {
+    e: "🍧", ar: "فريسكا", en: "Freska",
+    items: [
+      { ar: "فريسكا رول",           en: "Freska Roll",                price: 30, desc: "شوكليت - لوتس - وايت - كيندر / ميكس صوص" },
+      { ar: "فريسكا ساندويتش",      en: "Freska Sandwich",            price: 60, desc: "فريسكا + آيس كريم + صوص من اختيارك" },
+      { ar: "فريسكا رول كيك",       en: "Freska Roll Cake",           price: 45, desc: "هوهوز + أوريو + توبينق" },
+      { ar: "فريسكا كاب",           en: "Freska Cup",                 price: 70, desc: "فريسكا + آيس كريم + فواكه + ميكس صوص" }
+    ]
+  },
+  {
+    e: "🍩", ar: "ميني دوناتس", en: "Mini Donuts",
+    items: [
+      { ar: "ميني دوناتس شوكلت",    en: "Chocolate Mini Donuts",      price: "M (3): 70 | L (5): 100" },
+      { ar: "ميني دوناتس وايت شوكلت", en: "White Chocolate Mini Donuts", price: "M (3): 70 | L (5): 100" },
+      { ar: "ميني دوناتس لوتس",     en: "Lotus Mini Donuts",          price: "M (3): 70 | L (5): 100" },
+      { ar: "ميني دوناتس كيندر",    en: "Kinder Mini Donuts",         price: "M (3): 70 | L (5): 100" },
+      { ar: "ميني دوناتس هاف اند هاف", en: "Half & Half Mini Donuts", price: "M (3): 70 | L (5): 100", desc: "تشوكليت - وايت تشوكليت - كيندر - لوتس / بستاشيو +20" },
+      { ar: "ميني دوناتس بستاشيو",  en: "Pistachio Mini Donuts",      price: "M (3): 100 | L (5): 140" }
+    ]
+  },
+  {
+    e: "🧁", ar: "أكواب السعادة", en: "Happy Bar Cup",
+    items: [
+      { ar: "وافل كاب ميكس صوص",    en: "Waffle Cup Mix Sauce",       price: 90 },
+      { ar: "وافل كاب + براونيز ميكس صوص", en: "Waffle Cup + Brownie Mix Sauce", price: 95 },
+      { ar: "كاب براونيز + فواكه + صوص", en: "Brownie Cup + Fruit + Sauce", price: 95 },
+      { ar: "كاب ميكس",             en: "Mix Cup",                    price: 100, desc: "وافل + براونيز + بان كيك فواكه + صوص" },
+      { ar: "آيس كريم كاب",         en: "Ice Cream Cup",              price: 100, desc: "وافل + بان كيك + آيس كريم + صوص" }
+    ]
+  }
+];
+
+/* ============================================================
+   لا تعدّل أي حاجة تحت السطر ده — منطق العرض
+   ============================================================ */
+let lang = "ar";
+
+const T = {
+  ar: {
+    badge: "☕ قائمة المشروبات والوجبات",
+    tagline: 'ذوق <b>أجود</b> المشروبات والقهوة بلمسة عربية أصيلة',
+    infoTitle: "📍 موقعنا ومعلومات التواصل",
+    hoursLabel: "ساعات العمل:",
+    hoursValue: "من 8 صباحاً حتى 2 بعد منتصف الليل",
+    cta: "اطلب عبر واتساب",
+    foot: "شكراً لزيارتكم، نتمنى لكم أوقاتاً سعيدة"
+  },
+  en: {
+    badge: "☕ Drinks & Meals Menu",
+    tagline: 'Taste our <b>finest</b> coffee & drinks with an authentic touch',
+    infoTitle: "📍 Find us & Contact",
+    hoursLabel: "Hours:",
+    hoursValue: "8 AM – 2 AM",
+    cta: "Order on WhatsApp",
+    foot: "Thank you for visiting — enjoy your time"
+  }
+};
+
+function cur(v){
+  const c = lang === "ar" ? CAFE.currency : CAFE.currencyEn;
+  if (typeof v === "number") return v + " " + c;
+  return v + " " + c; /* نص جاهز زي "M: 25 | L: 45" */
+}
+
+function renderCats(){
+  const wrap = document.getElementById("cats");
+  wrap.innerHTML = "";
+  MENU.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.className = "cat-chip" + (i === 0 ? " active" : "");
+    b.dataset.i = i;
+    b.innerHTML = c.e + " " + c[lang];
+    b.onclick = () => {
+      document.querySelectorAll(".cat-chip").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      document.getElementById("cat-" + i).scrollIntoView({ behavior: "smooth" });
+    };
+    wrap.appendChild(b);
+  });
+}
+
+function renderMenu(){
+  const main = document.getElementById("menu");
+  main.innerHTML = "";
+  MENU.forEach((c, i) => {
+    const sec = document.createElement("section");
+    sec.className = "cat";
+    sec.id = "cat-" + i;
+
+    const head = document.createElement("div");
+    head.className = "cat-head";
+    head.innerHTML = `
+      <div class="ic">${c.e}</div>
+      <div>
+        <h2>${c[lang]}</h2>
+        <div class="en-sub">${lang === "ar" ? c.en : c.ar}</div>
+      </div>
+      <div class="rule"></div>`;
+    sec.appendChild(head);
+
+    const items = document.createElement("div");
+    items.className = "items";
+    c.items.forEach(it => {
+      const d = document.createElement("div");
+      d.className = "item";
+      const name = lang === "ar" ? it.ar : it.en;
+      const alt  = lang === "ar" ? it.en : it.ar;
+      let html = `
+        <div class="info">
+          <div class="name">${name}<span class="alt">${alt}</span></div>`;
+      if (it.desc) html += `<div class="desc">${it.desc}</div>`;
+      if (it.extra) it.extra.forEach(x => {
+        html += `<div class="extra">${lang === "ar" ? x.ar : x.en}</div>`;
+      });
+      html += `
+        </div>
+        <div class="price">${cur(it.price)}</div>`;
+      d.innerHTML = html;
+      items.appendChild(d);
+    });
+    sec.appendChild(items);
+
+    if (c.note){
+      const note = document.createElement("div");
+      note.className = "cat-note";
+      const lines = c.note.map(n => lang === "ar" ? n.ar : n.en);
+      note.innerHTML = "💡 " + lines.join(" &nbsp;•&nbsp; ");
+      sec.appendChild(note);
+    }
+
+    main.appendChild(sec);
+  });
+}
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.getElementById("btnAr").classList.toggle("active", lang === "ar");
+  document.getElementById("btnEn").classList.toggle("active", lang === "en");
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (T[lang][key] !== undefined) el.textContent = T[lang][key];
+  });
+  document.querySelector(".tagline").innerHTML = T[lang].tagline;
+  renderCats();
+  renderMenu();
+}
+
+document.getElementById("btnAr").onclick = () => { lang = "ar"; applyLang(); };
+document.getElementById("btnEn").onclick = () => { lang = "en"; applyLang(); };
+
+/* الواتساب والتليفون */
+document.getElementById("phoneVal").textContent = CAFE.phone;
+const waMsg = encodeURIComponent("مرحباً، عايز أطلب من منيو BAR CAFE 🌟");
+document.getElementById("waLink").href = "https://wa.me/" + CAFE.whatsapp + "?text=" + waMsg;
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+applyLang();
+</script>
+</body>
+</html>
