@@ -1003,7 +1003,7 @@ function loadCart(){
     const arr = JSON.parse(raw);
     (Array.isArray(arr) ? arr : []).forEach(e => {
       if (MENU[e.ci] && MENU[e.ci].items[e.ii] && e.qty > 0){
-        cart.push({ ci: e.ci, ii: e.ii, qty: e.qty, size: e.size || "", extras: e.extras || [] });
+        cart.push({ ci: e.ci, ii: e.ii, qty: e.qty, size: e.size || "", extras: (e.extras || []).filter(x => x && typeof x === "object" && x.a) });
       }
     });
   }catch(e){}
@@ -1028,16 +1028,36 @@ function optOf(e){
   return opts.find(o => o.label === e.size) || opts[0];
 }
 function cartKey(e){
-  return e.ci + ":" + e.ii + "::" + e.size + "::" + (e.extras || []).join(",");
+  return e.ci + ":" + e.ii + "::" + e.size + "::" + (e.extras || []).map(x => x.a + "@" + x.p).join(";");
 }
 function cartTotal(){
-  return cart.reduce((s, e) => s + optOf(e).price * e.qty, 0);
+  return cart.reduce((s, e) => s + lineUnit(e) * e.qty, 0);
 }
 function cartCount(){
   return cart.reduce((s, e) => s + e.qty, 0);
 }
 function curAmount(v){
   return v + " " + (lang === "ar" ? CAFE.currency : CAFE.currencyEn);
+}
+
+/* استخراج سعر الإضافة من النص زي "+25" أو "+20 ج.م" */
+function parseAddonPrice(txt){
+  const m = String(txt || "").match(/(?:^|[^\d])\+?(\d+(?:\.\d+)?)/);
+  return m ? parseFloat(m[1]) : 0;
+}
+/* مجموع أسعار إضافات الصنف الواحد (للقطعة) */
+function extraUnit(e){
+  return (e.extras || []).reduce((s, x) => s + (x.p || 0), 0);
+}
+/* سعر القطعة الواحدة شامل إضافاتها */
+function lineUnit(e){
+  return optOf(e).price + extraUnit(e);
+}
+/* اسم الإضافة من غير الرقم + السعر بين قوسين */
+function addonLabel(x){
+  const t = (lang === "ar" ? x.a : x.e) || "";
+  const clean = String(t).replace(/:?\s*\+?\s*[\d.]+(\.\d+)?\s*(ج\.م|EGP)?\s*$/i, "").trim();
+  return clean + " (+" + x.p + " " + (lang === "ar" ? CAFE.currency : CAFE.currencyEn) + ")";
 }
 
 /* الشريط السفلي */
@@ -1062,12 +1082,12 @@ function renderCart(){
     const it = MENU[e.ci].items[e.ii];
     const name = lang === "ar" ? it.ar : it.en;
     const opt = optOf(e);
-    const line = opt.price * e.qty;
+    const line = lineUnit(e) * e.qty;
     let sizeTxt = "";
     if (opt.label) sizeTxt = (lang === "ar" ? "مقاس " : "Size ") + "<b>" + opt.label + "</b>";
     let exTxt = "";
-    if (it.extra && e.extras && e.extras.length){
-      exTxt = e.extras.map(x => (lang === "ar" ? it.extra[x].ar : it.extra[x].en) || "").filter(Boolean).join("، ");
+    if (e.extras && e.extras.length){
+      exTxt = e.extras.map(addonLabel).join(" • ");
     }
     const row = document.createElement("div");
     row.className = "cart-row";
@@ -1126,10 +1146,20 @@ function openTx(ci, ii){
     });
     h += '</div>';
   }
+  const cat = MENU[ci];
+  const catAddons = (cat.note && cat.note.length) ? cat.note : [];
   if (it.extra && it.extra.length){
-    h += '<div class="lbl">' + (lang === "ar" ? "إضافات" : "Extras") + '</div><div class="extras">';
+    h += '<div class="lbl">' + (lang === "ar" ? "إضافات الصنف" : "Item extras") + '</div><div class="extras">';
     it.extra.forEach((x, j) => {
-      h += '<label class="extra-row"><input type="checkbox" data-j="' + j + '">' +
+      h += '<label class="extra-row"><input type="checkbox" data-group="item" data-j="' + j + '">' +
+           '<span>' + (lang === "ar" ? x.ar : x.en) + '</span></label>';
+    });
+    h += '</div>';
+  }
+  if (catAddons.length){
+    h += '<div class="lbl">' + (lang === "ar" ? "إضافات الفئة" : "Category add-ons") + '</div><div class="extras">';
+    catAddons.forEach((x, k) => {
+      h += '<label class="extra-row"><input type="checkbox" data-group="cat" data-j="' + k + '">' +
            '<span>' + (lang === "ar" ? x.ar : x.en) + '</span></label>';
     });
     h += '</div>';
@@ -1148,9 +1178,12 @@ function openTx(ci, ii){
     txState.size = opts[parseInt(ch.dataset.j, 10)].label;
   });
   box.querySelectorAll(".extra-row input").forEach(inp => inp.onchange = () => {
+    const g = inp.dataset.group;
     const j = parseInt(inp.dataset.j, 10);
-    const k = txState.extras.indexOf(j);
-    if (inp.checked && k < 0) txState.extras.push(j);
+    const src = g === "cat" ? MENU[txState.ci].note[j] : MENU[txState.ci].items[txState.ii].extra[j];
+    const cand = { p: parseAddonPrice(src.ar) || parseAddonPrice(src.en), a: src.ar, e: src.en };
+    const k = txState.extras.findIndex(z => z.a === cand.a);
+    if (inp.checked && k < 0) txState.extras.push(cand);
     if (!inp.checked && k >= 0) txState.extras.splice(k, 1);
   });
   document.getElementById("txMinus").onclick = () => {
@@ -1203,10 +1236,10 @@ function buildOrderMessage(){
     const opt = optOf(e);
     let s = (i + 1) + ") " + name;
     if (opt.label) s += " (" + opt.label + ")";
-    if (it.extra && e.extras && e.extras.length){
-      s += " + " + e.extras.map(x => (lang === "ar" ? it.extra[x].ar : it.extra[x].en) || "").filter(Boolean).join("، ");
+    if (e.extras && e.extras.length){
+      s += " + " + e.extras.map(addonLabel).join(" + ");
     }
-    s += " × " + e.qty + " — " + curAmount(opt.price * e.qty);
+    s += " × " + e.qty + " — " + curAmount(lineUnit(e) * e.qty);
     lines.push(s);
   });
   const total = (lang === "ar" ? "💰 الإجمالي: " : "💰 Total: ") + curAmount(cartTotal());
