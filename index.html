@@ -26,6 +26,28 @@
     --line:rgba(217,164,65,.22);
     --radius:16px;
     --shadow:0 6px 22px rgba(0,0,0,.35);
+    /* ألوان مساعدة (بتتغيّر مع الثيم) */
+    --title:#ffffff;
+    --nav-bg:rgba(23,17,10,.88);
+    --nav-bg2:rgba(32,23,16,.92);
+    --gold-soft:rgba(217,164,65,.1);
+  }
+  /* ===== الثيم الفاتح (بيج) — RGB(230, 205, 169) #E6CDA9 ===== */
+  html.light{
+    --bg:#e6cda9;
+    --bg2:#dcc193;
+    --card:#fbf3e1;
+    --card2:#f3e6cd;
+    --cream:#2b2115;
+    --cream-dim:#6f5c40;
+    --gold:#9a6f27;
+    --gold2:#8a6520;
+    --line:rgba(120,90,40,.3);
+    --shadow:0 6px 22px rgba(90,60,20,.16);
+    --title:#2b2115;
+    --nav-bg:rgba(248,238,221,.92);
+    --nav-bg2:rgba(243,230,205,.94);
+    --gold-soft:rgba(154,111,39,.12);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -65,7 +87,7 @@
     color:var(--gold2);
     border:1px solid var(--line);
     padding:6px 18px;border-radius:999px;
-    background:rgba(217,164,65,.08);
+    background:var(--gold-soft);
     margin-bottom:16px;
     text-transform:uppercase;
   }
@@ -74,7 +96,7 @@
     font-size:clamp(44px, 9vw, 74px);
     font-weight:800;
     letter-spacing:2px;
-    color:#fff;
+    color:var(--title);
     text-shadow:0 4px 30px rgba(217,164,65,.35);
     line-height:1.05;
   }
@@ -92,14 +114,14 @@
     position:sticky;top:0;z-index:50;
     display:flex;justify-content:center;align-items:center;gap:14px;
     padding:10px 16px;
-    background:rgba(23,17,10,.88);
+    background:var(--nav-bg);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
   .langbar .brand{font-weight:700;font-size:14px;color:var(--gold2);letter-spacing:1px}
   .langbar .spacer{flex:1;max-width:320px}
   .btn-lang{
-    border:1px solid var(--line);background:rgba(217,164,65,.1);
+    border:1px solid var(--line);background:var(--gold-soft);
     color:var(--cream);font-family:inherit;font-size:13px;font-weight:700;
     padding:6px 14px;border-radius:999px;cursor:pointer;
     transition:.2s;
@@ -112,7 +134,7 @@
     position:sticky;top:52px;z-index:40;
     display:flex;gap:8px;overflow-x:auto;
     padding:12px 16px;
-    background:rgba(32,23,16,.92);
+    background:var(--nav-bg2);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
     scrollbar-width:none;
@@ -149,7 +171,7 @@
     border:1px solid var(--line);
     border-radius:12px;
   }
-  .cat-head h2{font-size:20px;font-weight:900;color:#fff}
+  .cat-head h2{font-size:20px;font-weight:900;color:var(--title)}
   .cat-head .en-sub{font-size:12.5px;color:var(--cream-dim);font-weight:600;letter-spacing:.5px}
   .cat-head .rule{flex:1;height:1px;background:linear-gradient(90deg, var(--line), transparent)}
 
@@ -172,13 +194,13 @@
     border-radius:12px;
   }
   .item .info{flex:1;min-width:0}
-  .item .name{font-weight:700;font-size:15.5px;color:#fff;line-height:1.4}
+  .item .name{font-weight:700;font-size:15.5px;color:var(--title);line-height:1.4}
   .item .name .alt{font-weight:400;color:var(--cream-dim);font-size:13px;margin-inline-start:6px}
   .item .desc{font-size:12.5px;color:var(--cream-dim);margin-top:3px;line-height:1.55}
   .item .extra{font-size:12px;color:var(--gold2);margin-top:3px;line-height:1.5}
   .item .price{
     font-weight:900;font-size:15px;color:var(--gold2);
-    background:rgba(217,164,65,.1);
+    background:var(--gold-soft);
     border:1px solid var(--line);
     padding:7px 12px;border-radius:999px;
     line-height:1.4;text-align:center;
@@ -187,7 +209,7 @@
   .cat-note{
     margin-top:12px;
     padding:10px 14px;
-    background:rgba(217,164,65,.08);
+    background:var(--gold-soft);
     border:1px dashed var(--line);
     border-radius:12px;
     font-size:12.5px;color:var(--cream-dim);line-height:1.7;
@@ -247,6 +269,7 @@
   <span class="spacer"></span>
   <button class="btn-lang active" id="btnAr">العربية</button>
   <button class="btn-lang" id="btnEn">English</button>
+  <button class="btn-lang" id="btnTheme" title="تغيير اللون"><span id="themeLabel">☀️ بيج فاتح</span></button>
 </div>
 
 <div class="cats" id="cats"></div>
@@ -711,6 +734,26 @@ function applyLang(){
 
 document.getElementById("btnAr").onclick = () => { lang = "ar"; applyLang(); };
 document.getElementById("btnEn").onclick = () => { lang = "en"; applyLang(); };
+
+/* ===== زرار تغيير اللون (داكن ↔ بيج فاتح) ===== */
+function updateThemeLabel(){
+  const light = document.documentElement.classList.contains("light");
+  document.getElementById("themeLabel").textContent = light ? "🌙 داكن" : "☀️ بيج فاتح";
+}
+document.getElementById("btnTheme").onclick = () => {
+  document.documentElement.classList.toggle("light");
+  updateThemeLabel();
+  try {
+    localStorage.setItem("barcafe-theme",
+      document.documentElement.classList.contains("light") ? "light" : "dark");
+  } catch (e) {}
+};
+try {
+  if (localStorage.getItem("barcafe-theme") === "light") {
+    document.documentElement.classList.add("light");
+  }
+} catch (e) {}
+updateThemeLabel();
 
 /* الواتساب والتليفون */
 document.getElementById("phoneVal").textContent = CAFE.phone;
